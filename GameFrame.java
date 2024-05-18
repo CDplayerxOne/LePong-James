@@ -10,15 +10,10 @@ import javax.swing.*;
 public class GameFrame extends JFrame {
 
   GamePanel panel;
-  JPanel court;
 
   public GameFrame() {
     panel = new GamePanel(); // run GamePanel constructor
-    court = new JPanel();
-    court.setBackground(Color.BLUE);
-    court.setPreferredSize(new Dimension(1000, 600));
     panel.setOpaque(false);
-    this.add(court);
     this.add(panel);
     this.setTitle("LePong James"); // set title for frame
     this.setResizable(false); // frame can't change size

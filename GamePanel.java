@@ -21,6 +21,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public static final int GAME_WIDTH = 1280;
   public static final int GAME_HEIGHT = 677;
 
+  public int lastHit = 1;
+
   public Thread gameThread;
   public Image court;
   public Image image;
@@ -33,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     player1 = new Paddle(0, GAME_HEIGHT / 2, 1); // create a player controlled player1, set start location to
     player2 = new Paddle(GAME_WIDTH - Paddle.CHARACTER_WIDTH, GAME_HEIGHT / 2, 2); // create a player controlled
     ball = new Ball(GAME_WIDTH / 2 - Ball.BALL_DIAMETER / 2, GAME_HEIGHT / 2 - Ball.BALL_DIAMETER);
+
     // player1, set start
     // location to
     // middle of screen
@@ -77,13 +80,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   // call the draw methods in each class to update positions as things move
   public void draw(Graphics g) {
-    g.drawImage(court.getScaledInstance(1280, 677, Image.SCALE_DEFAULT), 0, 0, this);
+    g.drawImage(court.getScaledInstance(1280, 677, Image.SCALE_DEFAULT), 0, 0,
+        this);
     g.setColor(Color.BLACK);
     g.fillRect(0, 0, Paddle.CHARACTER_WIDTH, GAME_HEIGHT);
     g.fillRect(GAME_WIDTH - Paddle.CHARACTER_WIDTH, 0, Paddle.CHARACTER_WIDTH,
         GAME_HEIGHT);
     g.setColor(Color.WHITE);
-    g.drawString("Intersects: ", 0, 0);
     player1.draw(g);
     player2.draw(g);
     ball.draw(g);
@@ -116,8 +119,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       player2.y = GAME_HEIGHT - Paddle.CHARACTER_HEIGHT;
     }
 
-    if (ball.intersects(player1) || ball.intersects(player2)) {
+    if (ball.intersects(player1) && lastHit == 2) {
       ball.setXDirection(ball.xVelocity * -1);
+      lastHit = 1;
+      System.out.println("player1: " + ball.intersects(player1));
+      System.out.println("player2: " + ball.intersects(player2));
+    }
+    if (ball.intersects(player2) && lastHit == 1) {
+      ball.setXDirection(ball.xVelocity * -1);
+      lastHit = 2;
+      System.out.println("player1: " + ball.intersects(player1));
+      System.out.println("player2: " + ball.intersects(player2));
     }
   }
 

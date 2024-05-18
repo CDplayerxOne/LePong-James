@@ -22,7 +22,7 @@ public class Paddle extends Rectangle {
 
   // constructor creates ball at given location with given dimensions
   public Paddle(int x, int y, int p) {
-    super(x, y, CHARACTER_HEIGHT, CHARACTER_WIDTH);
+    super(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     player = p;
     try {
       if (player == 1) {
