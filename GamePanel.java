@@ -21,8 +21,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public static final int GAME_WIDTH = 1280;
   public static final int GAME_HEIGHT = 677;
 
-  public int lastHit = 1;
-
   public Thread gameThread;
   public Image court;
   public Image image;
@@ -86,10 +84,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     g.fillRect(0, 0, Paddle.CHARACTER_WIDTH, GAME_HEIGHT);
     g.fillRect(GAME_WIDTH - Paddle.CHARACTER_WIDTH, 0, Paddle.CHARACTER_WIDTH,
         GAME_HEIGHT);
-    g.setColor(Color.WHITE);
     player1.draw(g);
     player2.draw(g);
     ball.draw(g);
+    g.setColor(Color.WHITE);
+    g.setFont(new Font("timesRoman", Font.PLAIN, 20));
+    g.drawString("xVelocity: " + ball.xVelocity, 0, 20);
+    g.drawString("yVelocity: " + ball.yVelocity, 0, 40);
+    g.drawString("Angle " + ball.angle, 0, 60);
+    g.drawString("Speed " + ball.speed, 0, 80);
+    g.drawString("Speed ok: " + Math.sqrt(Math.pow(ball.xVelocity, 2) + Math.pow(ball.yVelocity, 2)), 0, 100);
   }
 
   // call the move methods in other classes to update positions
@@ -119,18 +123,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       player2.y = GAME_HEIGHT - Paddle.CHARACTER_HEIGHT;
     }
 
-    if (ball.intersects(player1) && lastHit == 2) {
-      ball.setXDirection(ball.xVelocity * -1);
-      lastHit = 1;
-      System.out.println("player1: " + ball.intersects(player1));
-      System.out.println("player2: " + ball.intersects(player2));
-    }
-    if (ball.intersects(player2) && lastHit == 1) {
-      ball.setXDirection(ball.xVelocity * -1);
-      lastHit = 2;
-      System.out.println("player1: " + ball.intersects(player1));
-      System.out.println("player2: " + ball.intersects(player2));
-    }
+    Physics.hitPaddle(ball, player1, player2);
+    Physics.hitWall(ball, GAME_HEIGHT);
+
   }
 
   // run() method is what makes the game continue running without end. It calls

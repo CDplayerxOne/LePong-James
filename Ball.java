@@ -12,9 +12,12 @@ import javax.imageio.ImageIO;
 
 public class Ball extends Rectangle {
 
-	public int yVelocity;
-	public int xVelocity;
-	public final int SPEED = 2; // movement speed of ball
+	public int xDirection = 1;
+	public int yDirection = 1;
+	public double yVelocity;
+	public double xVelocity;
+	public int speed = 3; // movement speed of ball
+	public double angle = 0;
 	public static final int BALL_DIAMETER = 30;
 	public Image image;
 
@@ -26,7 +29,8 @@ public class Ball extends Rectangle {
 
 		} catch (Exception e) {
 		}
-		xVelocity = SPEED;
+		xVelocity = (int) Math.round((speed * Math.cos(angle)));
+		yVelocity = (int) Math.round((speed * Math.sin(angle)));
 	}
 
 	// called from GamePanel when any keyboard input is detected
@@ -42,12 +46,18 @@ public class Ball extends Rectangle {
 	// on the screen
 
 	// called whenever the movement of the ball changes in the y-direction (up/down)
-	public void setYDirection(int yDirection) {
-		yVelocity = yDirection;
+	public void setYDirection(int direction) {
+		// System.out.println(Math.sin(angle));
+		// System.out.println(yDirection);
+		yDirection = direction * yDirection;
+		xVelocity = xDirection * (int) Math.round((speed * Math.cos(angle)));
+		yVelocity = yDirection * (int) Math.round((speed * Math.sin(angle)));
 	}
 
-	public void setXDirection(int xDirection) {
-		xVelocity = xDirection;
+	public void setXDirection(int direction) {
+		xDirection = direction * xDirection;
+		xVelocity = xDirection * (int) Math.round((speed * Math.cos(angle)));
+		yVelocity = yDirection * (int) Math.round((speed * Math.sin(angle)));
 	}
 
 	// called whenever the movement of the ball changes in the x-direction
@@ -56,8 +66,8 @@ public class Ball extends Rectangle {
 	// called frequently from both PlayerBall class and GamePanel class
 	// updates the current location of the ball
 	public void move() {
-		y = y + yVelocity;
-		x = x + xVelocity;
+		y = (int) Math.round((y + yVelocity));
+		x = (int) Math.round((x + xVelocity));
 	}
 
 	// called frequently from the GamePanel class
