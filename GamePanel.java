@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   // dimensions of window
   public static final int GAME_WIDTH = 1280;
   public static final int GAME_HEIGHT = 677;
+  public static final int SCORE_HEIGHT = 50;
 
   public Thread gameThread;
   public Image court;
@@ -28,11 +29,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Paddle player1;
   public Paddle player2;
   public Ball ball;
+  public Scoreboard scoreboard;
 
   public GamePanel() {
     player1 = new Paddle(0, GAME_HEIGHT / 2, 1); // create a player controlled player1, set start location to
     player2 = new Paddle(GAME_WIDTH - Paddle.CHARACTER_WIDTH, GAME_HEIGHT / 2, 2); // create a player controlled
     ball = new Ball(GAME_WIDTH / 2 - Ball.BALL_DIAMETER / 2, GAME_HEIGHT / 2 - Ball.BALL_DIAMETER);
+    scoreboard = new Scoreboard(GAME_HEIGHT, GAME_WIDTH, SCORE_HEIGHT);
 
     // player1, set start
     // location to
@@ -44,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // listen for mouse input. We do this differently from the KeyListener because
     // MouseAdapter has SEVEN mandatory methods - we only need one of them, and we
     // don't want to make 6 empty methods
-    this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
+    this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT + SCORE_HEIGHT));
 
     // make this class run at the same time as other classes (without this each
     // class would "pause" while another class runs). By using threading we can
@@ -68,7 +71,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // screen, it takes time and the human eye can actually notice flashes of lag as
     // each pixel on the screen is drawn one at a time. Instead, we are going to
     // draw images OFF the screen, then simply move the image on screen as needed.
-    image = createImage(GAME_WIDTH, GAME_HEIGHT); // draw off screen
+    image = createImage(GAME_WIDTH, GAME_HEIGHT + SCORE_HEIGHT); // draw off screen
 
     graphics = image.getGraphics();
     draw(graphics);// update the positions of everything on the screen
@@ -92,8 +95,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     g.drawString("xVelocity: " + ball.xVelocity, 0, 20);
     g.drawString("yVelocity: " + ball.yVelocity, 0, 40);
     g.drawString("Angle " + ball.angle, 0, 60);
-    g.drawString("Speed " + ball.speed, 0, 80);
-    g.drawString("Speed ok: " + Math.sqrt(Math.pow(ball.xVelocity, 2) + Math.pow(ball.yVelocity, 2)), 0, 100);
+    g.drawString("Target Speed " + ball.speed, 0, 80);
+    g.drawString("Actual Speed: " + Math.sqrt(Math.pow(ball.xVelocity, 2) + Math.pow(ball.yVelocity, 2)), 0, 100);
+    scoreboard.draw(g);
   }
 
   // call the move methods in other classes to update positions
@@ -125,6 +129,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     Physics.hitPaddle(ball, player1, player2);
     Physics.hitWall(ball, GAME_HEIGHT);
+    Scoreboard.checkScored(ball);
 
   }
 

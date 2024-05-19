@@ -16,7 +16,7 @@ public class Ball extends Rectangle {
 	public int yDirection = 1;
 	public double yVelocity;
 	public double xVelocity;
-	public int speed = 3; // movement speed of ball
+	public double speed = 4; // movement speed of ball
 	public double angle = 0;
 	public static final int BALL_DIAMETER = 30;
 	public Image image;
