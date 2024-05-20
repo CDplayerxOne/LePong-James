@@ -29,13 +29,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Paddle player1;
   public Paddle player2;
   public Ball ball;
-  public Scoreboard scoreboard;
+  public GameManager scoreboard;
 
   public GamePanel() {
-    player1 = new Paddle(0, GAME_HEIGHT / 2, 1); // create a player controlled player1, set start location to
-    player2 = new Paddle(GAME_WIDTH - Paddle.CHARACTER_WIDTH, GAME_HEIGHT / 2, 2); // create a player controlled
+    player1 = new Paddle(0, GAME_HEIGHT / 2 - Paddle.CHARACTER_HEIGHT / 2, 1); // create a player controlled player1,
+                                                                               // set start location to
+    player2 = new Paddle(GAME_WIDTH - Paddle.CHARACTER_WIDTH, GAME_HEIGHT / 2 - Paddle.CHARACTER_HEIGHT / 2, 2); // create
+                                                                                                                 // a
+                                                                                                                 // player
+                                                                                                                 // controlled
     ball = new Ball(GAME_WIDTH / 2 - Ball.BALL_DIAMETER / 2, GAME_HEIGHT / 2 - Ball.BALL_DIAMETER);
-    scoreboard = new Scoreboard(GAME_HEIGHT, GAME_WIDTH, SCORE_HEIGHT);
+    scoreboard = new GameManager(GAME_HEIGHT, GAME_WIDTH, SCORE_HEIGHT);
+
+    // this.add(startButton);
 
     // player1, set start
     // location to
@@ -60,7 +66,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     } catch (Exception e) {
     }
-
   }
 
   // paint is a method in java.awt library that we are overriding. It is a special
@@ -71,7 +76,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // screen, it takes time and the human eye can actually notice flashes of lag as
     // each pixel on the screen is drawn one at a time. Instead, we are going to
     // draw images OFF the screen, then simply move the image on screen as needed.
-    image = createImage(GAME_WIDTH, GAME_HEIGHT + SCORE_HEIGHT); // draw off screen
+    image = createImage(GAME_WIDTH, GAME_HEIGHT + SCORE_HEIGHT); // draw off
+    // screen
 
     graphics = image.getGraphics();
     draw(graphics);// update the positions of everything on the screen
@@ -129,7 +135,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     Physics.hitPaddle(ball, player1, player2);
     Physics.hitWall(ball, GAME_HEIGHT);
-    Scoreboard.checkScored(ball);
+    GameManager.checkScored(ball);
+    GameManager.checkWin(ball);
 
   }
 
@@ -165,6 +172,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public void keyPressed(KeyEvent e) {
     player1.keyPressed(e);
     player2.keyPressed(e);
+    scoreboard.keyPressed(e, ball);
   }
 
   // if a key is released, we'll send it over to the PlayerBall class for

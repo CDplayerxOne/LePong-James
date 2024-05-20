@@ -9,7 +9,7 @@ public class Physics {
 			ball.speed += 0.5;
 			ball.angle = ball.angle + (Math.round(Math.random()) == 0 ? Math.random() *
 					(Math.PI / 16)
-					: -Math.random() * (Math.PI / 16));
+					: -Math.random() * (Math.PI / 18));
 			ball.setXDirection(-1);
 			lastHit = 1;
 
@@ -17,13 +17,13 @@ public class Physics {
 		if (ball.intersects(player2) && lastHit == 1) {
 			ball.angle = ball.angle + (Math.round(Math.random()) == 0 ? Math.random() *
 					(Math.PI / 16)
-					: -Math.random() * (Math.PI / 16));
+					: -Math.random() * (Math.PI / 18));
 			if (firstHit) {
 				firstHit = false;
 				if (ball.angle >= 0) {
-					ball.angle += 0.2;
+					ball.angle += 0.25;
 				} else {
-					ball.angle -= 0.2;
+					ball.angle -= 0.25;
 				}
 			}
 			ball.speed += 0.5;

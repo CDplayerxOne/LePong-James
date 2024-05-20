@@ -13,7 +13,6 @@ public class GameFrame extends JFrame {
 
   public GameFrame() {
     panel = new GamePanel(); // run GamePanel constructor
-    panel.setOpaque(false);
     this.add(panel);
     this.setTitle("LePong James"); // set title for frame
     this.setResizable(false); // frame can't change size
