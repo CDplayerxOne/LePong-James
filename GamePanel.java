@@ -135,8 +135,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     Physics.hitPaddle(ball, player1, player2);
     Physics.hitWall(ball, GAME_HEIGHT);
-    GameManager.checkScored(ball);
     GameManager.checkWin(ball);
+    GameManager.checkScored(ball);
 
   }
 

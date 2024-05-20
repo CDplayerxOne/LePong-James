@@ -15,7 +15,7 @@ public class GameManager {
 	public static boolean hasGameEnded = false;
 	public Image title;
 
-	public static int[] score = { 9, 0 };
+	public static int[] score = { 0, 9 };
 
 	public GameManager(int h, int w, int s) {
 		GAME_HEIGHT = h;
@@ -31,7 +31,11 @@ public class GameManager {
 		ball.x = GAME_WIDTH / 2 - Ball.BALL_DIAMETER / 2;
 		ball.y = GAME_HEIGHT / 2 - Ball.BALL_DIAMETER;
 		ball.angle = 0;
-		ball.speed = 4;
+		if (hasGameStarted) {
+			ball.speed = 4;
+		} else {
+			ball.speed = 0;
+		}
 		ball.xDirection = 1;
 		ball.yDirection = 1;
 		ball.xVelocity = (int) Math.round((ball.speed * Math.cos(ball.angle)));
@@ -50,11 +54,13 @@ public class GameManager {
 				score[1]++;
 				reset(ball);
 			}
+
 		}
 	}
 
 	public static void checkWin(Ball ball) {
 		if (score[0] == 10 || score[1] == 10) {
+			reset(ball);
 			ball.speed = 0;
 			hasGameEnded = true;
 		}
@@ -65,6 +71,23 @@ public class GameManager {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				hasGameStarted = true;
 				reset(ball);
+			}
+		}
+
+		if (hasGameEnded) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				score[0] = 0;
+				score[1] = 0;
+				hasGameEnded = false;
+				reset(ball);
+			}
+			if (e.getKeyChar() == 'x') {
+				score[0] = 0;
+				score[1] = 0;
+				hasGameStarted = false;
+				hasGameEnded = false;
+				reset(ball);
+				ball.speed = 0;
 			}
 		}
 
@@ -147,5 +170,29 @@ public class GameManager {
 		g.setColor(Color.WHITE);
 		g.drawString("LeGoat 🐐 Score: " + score[0], 200, GAME_HEIGHT + 35);
 		g.drawString("Chef Curry Score: " + score[1], 200 + GAME_WIDTH / 2, GAME_HEIGHT + 35);
+
+		if (hasGameEnded && score[0] == 10) {
+			g.setColor(Color.BLUE);
+			g.setFont(new Font("timesRoman", Font.PLAIN, 60));
+			g.drawString("WINNER!!!", 200, 200);
+		}
+		if (hasGameEnded && score[1] == 10) {
+			g.setColor(Color.BLUE);
+			g.setFont(new Font("timesRoman", Font.PLAIN, 60));
+			g.drawString("WINNER!!!", 800, 200);
+		}
+
+		if (hasGameEnded) {
+			g.setColor(Color.RED);
+			g.fillRect(GAME_WIDTH / 2 - 160, 360, 320,
+					170);
+			g.setColor(Color.BLACK);
+			g.fillRect(GAME_WIDTH / 2 - 150, 370, 300,
+					150);
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("timesRoman", Font.PLAIN, 20));
+			g.drawString("Press \"SPACE\" to play again", GAME_WIDTH / 2 - 130, 445);
+			g.drawString("Press \"x\" to quit", GAME_WIDTH / 2 - 130, 465);
+		}
 	}
 }
