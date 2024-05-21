@@ -45,6 +45,7 @@ public class GameManager {
 		} else {
 			ball.speed = 0;
 		}
+		// Ball goes to winner of the point
 		if (Physics.lastHit == 2) {
 			ball.xDirection = -1;
 		} else {

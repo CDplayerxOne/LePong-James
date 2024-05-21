@@ -7,7 +7,8 @@ public class Physics {
 
 	// lastHit makes sure it hits the other player before it hits yourself.
 	// Otherwise, because of the size of the ball relative to the paddle, the ball
-	// may bounce within the player
+	// may bounce within the player. Also helps keep track of who the ball goes to
+	// when it resets
 	public static int lastHit = 1;
 	public static boolean firstHit = true;
 
