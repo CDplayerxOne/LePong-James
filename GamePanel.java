@@ -1,26 +1,21 @@
+// Author: Corey Dai
+// Date: May 21st, 2024
+// Description: Continously runs the game and performs necessary commands 
 
-/* GamePanel class acts as the main "game loop" - continuously runs the game and calls whatever needs to be called
-
-Child of JPanel because JPanel contains methods for drawing to the screen
-
-Implements KeyListener interface to listen for keyboard input
-
-Implements Runnable interface to use "threading" - let the game do two things at once
-
-*/
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+// Continously runs the game and performs necessary commands 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-  // dimensions of window
+  // Dimensions of window
   public static final int GAME_WIDTH = 1280;
   public static final int GAME_HEIGHT = 677;
   public static final int SCORE_HEIGHT = 50;
+  public static boolean error = false;
 
   public Thread gameThread;
   public Image court;
@@ -31,6 +26,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
   public Ball ball;
   public GameManager scoreboard;
 
+  // Initializes the players, the ball, the scoreboard and sets up the proper
+  // settings
   public GamePanel() {
     player1 = new Paddle(0, GAME_HEIGHT / 2 - Paddle.CHARACTER_HEIGHT / 2, 1); // create a player controlled player1,
                                                                                // set start location to
@@ -41,18 +38,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     ball = new Ball(GAME_WIDTH / 2 - Ball.BALL_DIAMETER / 2, GAME_HEIGHT / 2 - Ball.BALL_DIAMETER);
     scoreboard = new GameManager(GAME_HEIGHT, GAME_WIDTH, SCORE_HEIGHT);
 
-    // this.add(startButton);
-
-    // player1, set start
-    // location to
-    // middle of screen
     this.setFocusable(true); // make everything in this class appear on the screen
     this.addKeyListener(this); // start listening for keyboard input
 
-    // add the MousePressed method from the MouseAdapter - by doing this we can
-    // listen for mouse input. We do this differently from the KeyListener because
-    // MouseAdapter has SEVEN mandatory methods - we only need one of them, and we
-    // don't want to make 6 empty methods
     this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT + SCORE_HEIGHT));
 
     // make this class run at the same time as other classes (without this each
@@ -61,10 +49,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     // time!
     gameThread = new Thread(this);
     gameThread.start();
+
+    // Loads background image
     try {
       court = ImageIO.read(new File("images/court.jpg"));
 
     } catch (Exception e) {
+      error = true;
     }
   }
 
@@ -85,25 +76,39 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
   }
 
-  // call the draw methods in each class to update positions as things move
+  // Called if an error occurs
+  public static void setError() {
+    error = true;
+  }
+
+  // Call the draw methods in each class to update positions as things move
   public void draw(Graphics g) {
-    g.drawImage(court.getScaledInstance(1280, 677, Image.SCALE_DEFAULT), 0, 0,
-        this);
-    g.setColor(Color.BLACK);
-    g.fillRect(0, 0, Paddle.CHARACTER_WIDTH, GAME_HEIGHT);
-    g.fillRect(GAME_WIDTH - Paddle.CHARACTER_WIDTH, 0, Paddle.CHARACTER_WIDTH,
-        GAME_HEIGHT);
-    player1.draw(g);
-    player2.draw(g);
-    ball.draw(g);
-    g.setColor(Color.WHITE);
-    g.setFont(new Font("timesRoman", Font.PLAIN, 20));
-    g.drawString("xVelocity: " + ball.xVelocity, 0, 20);
-    g.drawString("yVelocity: " + ball.yVelocity, 0, 40);
-    g.drawString("Angle " + ball.angle, 0, 60);
-    g.drawString("Target Speed " + ball.speed, 0, 80);
-    g.drawString("Actual Speed: " + Math.sqrt(Math.pow(ball.xVelocity, 2) + Math.pow(ball.yVelocity, 2)), 0, 100);
-    scoreboard.draw(g);
+    // Court
+    if (!error) {
+      g.drawImage(court.getScaledInstance(1280, 677, Image.SCALE_DEFAULT), 0, 0,
+          this);
+      g.setColor(Color.BLACK);
+      g.fillRect(0, 0, Paddle.CHARACTER_WIDTH, GAME_HEIGHT);
+      g.fillRect(GAME_WIDTH - Paddle.CHARACTER_WIDTH, 0, Paddle.CHARACTER_WIDTH,
+          GAME_HEIGHT);
+
+      // Players
+      player1.draw(g);
+      player2.draw(g);
+
+      // Ball
+      ball.draw(g);
+      scoreboard.draw(g);
+    }
+
+    // Error screen
+    if (error) {
+      g.setColor(Color.BLACK);
+      g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT + SCORE_HEIGHT);
+      g.setColor(Color.RED);
+      g.setFont(new Font("timesRoman", Font.PLAIN, 40));
+      g.drawString("An Error Occured. Sorry for the inconvenience. ", 150, 400);
+    }
   }
 
   // call the move methods in other classes to update positions
@@ -133,8 +138,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       player2.y = GAME_HEIGHT - Paddle.CHARACTER_HEIGHT;
     }
 
+    // Determines what happens when the ball hits certain areas
     Physics.hitPaddle(ball, player1, player2);
     Physics.hitWall(ball, GAME_HEIGHT);
+
+    // Checks for scoring and wins
     GameManager.checkWin(ball);
     GameManager.checkScored(ball);
 
@@ -167,7 +175,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
   }
 
-  // if a key is pressed, we'll send it over to the PlayerBall class for
+  // if a key is pressed, we'll send it over to the Paddle and GameManager classes
+  // for
   // processing
   public void keyPressed(KeyEvent e) {
     player1.keyPressed(e);
@@ -175,7 +184,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     scoreboard.keyPressed(e, ball);
   }
 
-  // if a key is released, we'll send it over to the PlayerBall class for
+  // if a key is released, we'll send it over to the Paddle class for
   // processing
   public void keyReleased(KeyEvent e) {
     player1.keyReleased(e);

@@ -1,16 +1,13 @@
+// Author: Corey Dai
+// Date: May 21st, 2024
+// Description: Forms the paddle controlled by each user
 
-/* PlayerBall class defines behaviours for the player-controlled ball  
-
-child of Rectangle because that makes it easy to draw and check for collision
-
-In 2D GUI, basically everything is a rectangle even if it doesn't look like it!
-*/
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
+// Forms the paddle controlled by each user
 public class Paddle extends Rectangle {
 
   public int yVelocity;
@@ -20,7 +17,8 @@ public class Paddle extends Rectangle {
   public int player;
   public Image image;
 
-  // constructor creates ball at given location with given dimensions
+  // constructor creates a paddle at given location with given dimensions at a
+  // given location and loads images
   public Paddle(int x, int y, int p) {
     super(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT);
     player = p;
@@ -33,14 +31,14 @@ public class Paddle extends Rectangle {
         image = ImageIO.read(new File("images/Steph.png"));
       }
     } catch (Exception e) {
+      GamePanel.setError();
     }
   }
 
   // called from GamePanel when any keyboard input is detected
-  // updates the direction of the ball based on user input
-  // if the keyboard input isn't any of the options (d, a, w, s), then nothing
-  // happens
+  // updates the direction of the paddle based on user input
   public void keyPressed(KeyEvent e) {
+    // Player 1 controls
     if (player == 1) {
       if (e.getKeyChar() == 'w') {
         setYDirection(SPEED * -1);
@@ -53,6 +51,7 @@ public class Paddle extends Rectangle {
       }
     }
 
+    // Player 2 controls
     if (player == 2) {
       if (e.getKeyCode() == KeyEvent.VK_UP) {
         setYDirection(SPEED * -1);
@@ -67,7 +66,7 @@ public class Paddle extends Rectangle {
   }
 
   // called from GamePanel when any key is released (no longer being pressed down)
-  // Makes the ball stop moving in that direction
+  // Makes the paddle stop moving in that direction
   public void keyReleased(KeyEvent e) {
     if (player == 1) {
       if (e.getKeyChar() == 'w') {
@@ -94,31 +93,24 @@ public class Paddle extends Rectangle {
     }
   }
 
-  // called from GamePanel whenever a mouse click is detected
-  // changes the current location of the ball to be wherever the mouse is located
-  // on the screen
-
-  // called whenever the movement of the ball changes in the y-direction (up/down)
+  // Called whenever the movement of the ball changes in the y-direction (up/down)
   public void setYDirection(int yDirection) {
     yVelocity = yDirection;
   }
 
-  // called whenever the movement of the ball changes in the x-direction
-  // (left/right)
-
-  // called frequently from both PlayerBall class and GamePanel class
-  // updates the current location of the ball
+  // Updates the current location of the ball
   public void move() {
     y = y + yVelocity;
   }
 
   // called frequently from the GamePanel class
-  // draws the current location of the ball to the screen
+  // draws the current location of the Paddle to the screen
   public void draw(Graphics g) {
-    g.setColor(Color.black);
-    // g.fillRect(x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT);
-    g.drawImage(image.getScaledInstance(CHARACTER_WIDTH, CHARACTER_HEIGHT,
-        Image.SCALE_DEFAULT), x, y, null);
+    if (!GamePanel.error) {
+      g.setColor(Color.black);
+      g.drawImage(image.getScaledInstance(CHARACTER_WIDTH, CHARACTER_HEIGHT,
+          Image.SCALE_DEFAULT), x, y, null);
+    }
   }
 
 }
