@@ -164,13 +164,13 @@ public class GameManager {
 				g.drawString("P2 Controls", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 135, 340);
 				g.setFont(new Font("timesRoman", Font.PLAIN, 40));
 				g.setColor(Color.CYAN);
-				g.drawString("⬆️", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 75, 400);
+				g.drawString("⬆", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 75, 400);
 				g.setColor(Color.WHITE);
 				g.setFont(new Font("timesRoman", Font.PLAIN, 20));
 				g.drawString("up", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 75, 420);
 				g.setFont(new Font("timesRoman", Font.PLAIN, 40));
 				g.setColor(Color.CYAN);
-				g.drawString("⬇️", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 75, 500);
+				g.drawString("⬇", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 75, 500);
 				g.setColor(Color.WHITE);
 				g.setFont(new Font("timesRoman", Font.PLAIN, 20));
 				g.drawString("down", GAME_WIDTH / 2 + title.getWidth(null) / 2 - 90, 520);
@@ -193,7 +193,7 @@ public class GameManager {
 			g.fillRect(0, GAME_HEIGHT, GAME_WIDTH, SCORE_HEIGHT);
 			g.setFont(new Font("timesRoman", Font.PLAIN, 30));
 			g.setColor(Color.WHITE);
-			g.drawString("LeGoat 🐐 Score: " + score[0], 200, GAME_HEIGHT + 35);
+			g.drawString("LeGoat Score: " + score[0], 200, GAME_HEIGHT + 35);
 			g.drawString("Chef Curry Score: " + score[1], 200 + GAME_WIDTH / 2, GAME_HEIGHT + 35);
 
 			// Winner message
